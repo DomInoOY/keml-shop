@@ -657,6 +657,8 @@
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
             transition: all 0.3s;
+            display: inline-block;
+            margin-bottom: 0.5rem;
         }
 
         .telegram-btn:hover {
@@ -789,6 +791,19 @@
         .hidden {
             display: none !important;
         }
+
+        /* Стили для Apple техники */
+        .apple-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .apple-categories .btn {
+            min-width: 150px;
+        }
     </style>
 </head>
 <body>
@@ -803,6 +818,7 @@
                 <ul class="nav-menu">
                     <li><a onclick="showPage('home')">Главная</a></li>
                     <li><a onclick="showPage('catalog')">Каталог</a></li>
+                    <li><a onclick="showPage('apple-tech')">Apple техника</a></li>
                     <li><a onclick="showPage('cart')">Корзина (<span id="cart-count">0</span>)</a></li>
                 </ul>
             </nav>
@@ -816,7 +832,7 @@
             <div id="home-page" class="page active">
                 <section class="hero">
                     <h1>Keml Shop</h1>
-                    <p>Лучшие товары для вейпинга</p>
+                    <p>Лучшие товары для вейпинга и Apple техники</p>
                     <br>
                     <button class="btn" onclick="showPage('catalog')">Перейти в каталог</button>
                 </section>
@@ -845,6 +861,10 @@
                     <div class="category-card" onclick="goToCategory('Аксессуары и прочее')">
                         <div class="category-icon">🔧</div>
                         <h3>Аксессуары и прочее</h3>
+                    </div>
+                    <div class="category-card" onclick="showPage('apple-tech')">
+                        <img src="images/app.jpg" alt="Apple техника" class="category-image">
+                        <h3>Apple техника</h3>
                     </div>
                 </section>
             </div>
@@ -876,6 +896,7 @@
                     <button class="filter-btn" onclick="filterByCategory('Картриджи')">Картриджи</button>
                     <button class="filter-btn" onclick="filterByCategory('Жевательный табак')">Жевательный табак</button>
                     <button class="filter-btn" onclick="filterByCategory('Аксессуары и прочее')">Аксессуары и прочее</button>
+                    <button class="filter-btn" onclick="filterByCategory('Apple техника')">Apple техника</button>
                 </div>
 
                 <div id="products-grid" class="products-grid"></div>
@@ -939,6 +960,20 @@
                         <button type="submit" class="btn">Оформить заказ</button>
                     </form>
                 </div>
+            </div>
+
+            <!-- Страница Apple техники -->
+            <div id="apple-tech-page" class="page">
+                <h2 style="margin-bottom: 2rem;">Apple техника</h2>
+                
+                <div class="apple-categories">
+                    <button class="btn" onclick="showAppleCategory('iphones')">Айфоны</button>
+                    <button class="btn" onclick="showAppleCategory('macbooks')">Макбуки</button>
+                    <button class="btn" onclick="showAppleCategory('ipads')">Айпады</button>
+                    <button class="btn" onclick="showAppleCategory('headphones')">Наушники</button>
+                </div>
+                
+                <div id="apple-products-grid" class="products-grid"></div>
             </div>
 
             <!-- Админ-панель -->
@@ -1017,6 +1052,7 @@
                                 <option value="Картриджи">Картриджи</option>
                                 <option value="Жевательный табак">Жевательный табак</option>
                                 <option value="Аксессуары и прочее">Аксессуары и прочее</option>
+                                <option value="Apple техника">Apple техника</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -1052,10 +1088,14 @@
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <p>Контакты: @keml_manager</p>
+                    <p>Контакты: <a href="https://t.me/keml_manager" target="_blank">@keml_manager</a></p>
                     <p>Время работы: 9:00-23:00 МСК</p>
                 </div>
-                <a href="https://t.me/keml_manager" target="_blank" class="telegram-btn">Связаться с менеджером</a>
+                <div>
+                    <a href="https://t.me/Kemlshop" target="_blank" class="telegram-btn">Связь с менеджером</a>
+                    <br><br>
+                    <a href="https://t.me/Kemlshop" target="_blank" class="telegram-btn">Наш Telegram канал</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -1261,6 +1301,93 @@
                         image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop",
                         description: "Защитный кейс с карманом для жидкостей",
                         characteristics: ["Материал: EVA", "Размер: 15x8x5 см", "Цвет: черный"]
+                    },
+                    // Apple техника - Айфоны
+                    {
+                        id: 101,
+                        name: "iPhone 15 Pro",
+                        category: "Apple техника",
+                        subcategory: "iphones",
+                        price: 120000,
+                        image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
+                        description: "Флагманский смартфон Apple с титановым корпусом",
+                        characteristics: ["6.1\" дисплей", "A17 Pro чип", "48 Мп камера", "128 ГБ памяти"]
+                    },
+                    {
+                        id: 102,
+                        name: "iPhone 15",
+                        category: "Apple техника",
+                        subcategory: "iphones",
+                        price: 90000,
+                        image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
+                        description: "Базовая модель iPhone 15",
+                        characteristics: ["6.1\" дисплей", "A16 Bionic чип", "48 Мп камера", "128 ГБ памяти"]
+                    },
+                    
+                    // Apple техника - Макбуки
+                    {
+                        id: 103,
+                        name: "MacBook Pro 14\"",
+                        category: "Apple техника",
+                        subcategory: "macbooks",
+                        price: 200000,
+                        image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
+                        description: "Профессиональный ноутбук Apple",
+                        characteristics: ["14\" Liquid Retina XDR", "M3 Pro чип", "18 ГБ RAM", "512 ГБ SSD"]
+                    },
+                    {
+                        id: 104,
+                        name: "MacBook Air 13\"",
+                        category: "Apple техника",
+                        subcategory: "macbooks",
+                        price: 120000,
+                        image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=400&fit=crop",
+                        description: "Тонкий и легкий ноутбук",
+                        characteristics: ["13.6\" Liquid Retina", "M2 чип", "8 ГБ RAM", "256 ГБ SSD"]
+                    },
+                    
+                    // Apple техника - Айпады
+                    {
+                        id: 105,
+                        name: "iPad Pro 11\"",
+                        category: "Apple техника",
+                        subcategory: "ipads",
+                        price: 80000,
+                        image: "https://images.unsplash.com/photo-1544244016-0a4fffde374e?w=400&h=400&fit=crop",
+                        description: "Профессиональный планшет",
+                        characteristics: ["11\" Liquid Retina", "M2 чип", "128 ГБ памяти", "Apple Pencil"]
+                    },
+                    {
+                        id: 106,
+                        name: "iPad Air",
+                        category: "Apple техника",
+                        subcategory: "ipads",
+                        price: 60000,
+                        image: "https://images.unsplash.com/photo-1544244016-0a4fffde374e?w=400&h=400&fit=crop",
+                        description: "Универсальный планшет",
+                        characteristics: ["10.9\" Liquid Retina", "M1 чип", "64 ГБ памяти", "Apple Pencil"]
+                    },
+                    
+                    // Apple техника - Наушники
+                    {
+                        id: 107,
+                        name: "AirPods Pro 2",
+                        category: "Apple техника",
+                        subcategory: "headphones",
+                        price: 25000,
+                        image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop",
+                        description: "Беспроводные наушники с активным шумоподавлением",
+                        characteristics: ["Активное шумоподавление", "Адаптивный режим", "6 часов работы", "Зарядный кейс"]
+                    },
+                    {
+                        id: 108,
+                        name: "AirPods Max",
+                        category: "Apple техника",
+                        subcategory: "headphones",
+                        price: 60000,
+                        image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=400&fit=crop",
+                        description: "Премиальные наушники-накладники",
+                        characteristics: ["Высококачественный звук", "Активное шумоподавление", "20 часов работы", "Цифровая корона"]
                     }
                 ];
                 // Сохраняем товары по умолчанию
@@ -1301,6 +1428,9 @@
                 renderAdminProducts();
                 renderOrders();
                 loadAdminStats();
+            } else if (pageName === 'apple-tech') {
+                // Очищаем сетку товаров при входе в категорию
+                document.getElementById('apple-products-grid').innerHTML = '';
             }
         }
 
@@ -1455,6 +1585,17 @@
         // Показать страницу товара
         function showProduct(productId) {
             currentProduct = products.find(p => p.id === productId);
+            
+            // Если товар не найден в текущем фильтре, ищем во всех товарах
+            if (!currentProduct) {
+                currentProduct = allProducts.find(p => p.id === productId);
+            }
+            
+            if (!currentProduct) {
+                showToast('Товар не найден');
+                return;
+            }
+            
             const detailContainer = document.getElementById('product-detail');
             
             detailContainer.innerHTML = `
@@ -1608,6 +1749,14 @@
         async function handleOrderSubmit(e) {
             e.preventDefault();
             
+            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            
+            // Проверка минимальной суммы заказа
+            if (total < 3500) {
+                showToast('Минимальная сумма заказа 3500₽');
+                return;
+            }
+            
             const formData = {
                 id: Date.now(),
                 name: document.getElementById('name').value,
@@ -1615,7 +1764,7 @@
                 city: document.getElementById('city').value,
                 comment: document.getElementById('comment').value,
                 items: cart,
-                total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                total: total,
                 status: 'new',
                 date: new Date().toISOString()
             };
@@ -1947,6 +2096,37 @@
                 console.error('Ошибка отправки тестового уведомления:', error);
                 showToast('Ошибка отправки уведомления. Проверьте настройки Telegram.');
             }
+        }
+
+        // Функции для работы с Apple техникой
+        function showAppleCategory(subcategory) {
+            // Фильтруем товары по подкатегории
+            const appleProducts = allProducts.filter(p => 
+                p.category === 'Apple техника' && p.subcategory === subcategory
+            );
+            
+            renderAppleProducts(appleProducts);
+        }
+
+        // Функция рендеринга товаров Apple
+        function renderAppleProducts(products) {
+            const grid = document.getElementById('apple-products-grid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #6c757d;">Товары не найдены</p>';
+                return;
+            }
+            
+            grid.innerHTML = products.map(product => `
+                <div class="product-card" onclick="showProduct(${product.id})">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">${product.price} ₽</div>
+                        <button class="btn" onclick="event.stopPropagation(); addToCart(${product.id})">В корзину</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Показ toast уведомления
