@@ -147,6 +147,14 @@
             background-color: #059669;
         }
 
+        .btn-warning {
+            background-color: #f59e0b;
+        }
+
+        .btn-warning:hover {
+            background-color: #d97706;
+        }
+
         /* Поиск */
         .search-container {
             margin-bottom: 2rem;
@@ -620,6 +628,12 @@
             color: #6c757d;
         }
 
+        .admin-product-card .admin-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
         /* Таблица заказов */
         .orders-table {
             width: 100%;
@@ -743,7 +757,7 @@
             padding: 3rem;
             border-radius: 1rem;
             text-align: center;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             border: 1px solid rgba(233, 236, 239, 0.7);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -767,6 +781,44 @@
             justify-content: center;
         }
 
+        /* Модальное окно редактирования товара */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .edit-modal-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 90%;
+            border: 1px solid rgba(233, 236, 239, 0.7);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .edit-modal-content h2 {
+            margin-bottom: 1.5rem;
+            color: #212529;
+        }
+
+        .edit-modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
         /* Toast уведомления */
         .toast {
             position: fixed;
@@ -779,7 +831,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transform: translateX(400px);
             transition: transform 0.3s;
-            z-index: 1001;
+            z-index: 1002;
         }
 
         .toast.show {
@@ -827,6 +879,10 @@
             .orders-table th,
             .orders-table td {
                 padding: 0.5rem;
+            }
+
+            .edit-modal-content {
+                padding: 1.5rem;
             }
         }
 
@@ -1198,7 +1254,8 @@
                         </div>
                         <div class="form-group">
                             <label for="product-category">Категория</label>
-                            <select id="product-category" required>
+                            <select id="product-category" required onchange="updateSubcategoryOptions()">
+                                <option value="">Выберите категорию</option>
                                 <option value="Одноразовые сигареты">Одноразовые сигареты</option>
                                 <option value="Жидкости для вейпа">Жидкости для вейпа</option>
                                 <option value="Pod-системы">Pod-системы</option>
@@ -1209,11 +1266,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="product-subcategory">Подкатегория (для жевательного табака)</label>
+                            <label for="product-subcategory">Подкатегория</label>
                             <select id="product-subcategory">
                                 <option value="">Не выбрано</option>
-                                <option value="Бестабачный">Бестабачный</option>
-                                <option value="Табачный">Табачный</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -1284,6 +1339,58 @@
         </div>
     </div>
 
+    <!-- Модальное окно редактирования товара -->
+    <div id="edit-product-modal" class="edit-modal">
+        <div class="edit-modal-content">
+            <h2>Редактировать товар</h2>
+            <form id="edit-product-form">
+                <div class="form-group">
+                    <label for="edit-product-name">Название</label>
+                    <input type="text" id="edit-product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-category">Категория</label>
+                    <select id="edit-product-category" required onchange="updateEditSubcategoryOptions()">
+                        <option value="">Выберите категорию</option>
+                        <option value="Одноразовые сигареты">Одноразовые сигареты</option>
+                        <option value="Жидкости для вейпа">Жидкости для вейпа</option>
+                        <option value="Pod-системы">Pod-системы</option>
+                        <option value="Картриджи">Картриджи</option>
+                        <option value="Жевательный табак">Жевательный табак</option>
+                        <option value="Аксессуары и прочее">Аксессуары и прочее</option>
+                        <option value="Apple техника">Apple техника</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-subcategory">Подкатегория</label>
+                    <select id="edit-product-subcategory">
+                        <option value="">Не выбрано</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-price">Цена</label>
+                    <input type="number" id="edit-product-price" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-image">URL изображения</label>
+                    <input type="text" id="edit-product-image" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-description">Описание</label>
+                    <textarea id="edit-product-description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Характеристики (через запятую)</label>
+                    <input type="text" id="edit-product-characteristics">
+                </div>
+                <div class="edit-modal-buttons">
+                    <button type="button" class="btn btn-danger" onclick="closeEditModal()">Отмена</button>
+                    <button type="submit" class="btn">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast уведомление -->
     <div id="toast" class="toast"></div>
 
@@ -1296,6 +1403,7 @@
         let currentFilter = 'all';
         let currentSubcategory = 'all';
         let currentProduct = null;
+        let editingProductId = null;
         let currentPage = 1;
         const itemsPerPage = 6;
         let allProducts = [];
@@ -1304,6 +1412,12 @@
         const telegramConfig = {
             token: '8284927236:AAEDASsSMU7GdWwqiSZIjZp0KdTLER49ZiE',
             chatIds: ['7745926883', '5368784136'] // Массив ID получателей
+        };
+
+        // Подкатегории для разных категорий
+        const subcategories = {
+            'Жевательный табак': ['Бестабачный', 'Табачный'],
+            'Apple техника': ['iphones', 'macbooks', 'ipads', 'headphones']
         };
 
         // Инициализация
@@ -1337,6 +1451,12 @@
             const addProductForm = document.getElementById('add-product-form');
             if (addProductForm) {
                 addProductForm.addEventListener('submit', addProduct);
+            }
+            
+            // Обработчик формы редактирования товара
+            const editProductForm = document.getElementById('edit-product-form');
+            if (editProductForm) {
+                editProductForm.addEventListener('submit', updateProduct);
             }
             
             // Обработчик формы отзыва
@@ -2170,13 +2290,16 @@
 
         function renderAdminProducts() {
             const container = document.getElementById('admin-products-list');
-            container.innerHTML = products.map(product => `
+            container.innerHTML = allProducts.map(product => `
                 <div class="admin-product-card">
                     <h4>${product.name}</h4>
                     <p>Категория: ${product.category}</p>
                     ${product.subcategory ? `<p>Подкатегория: ${product.subcategory}</p>` : ''}
                     <p>Цена: ${product.price} ₽</p>
-                    <button class="btn btn-danger" onclick="removeProduct(${product.id})">Удалить</button>
+                    <div class="admin-actions">
+                        <button class="btn btn-warning" onclick="editProduct(${product.id})">Редактировать</button>
+                        <button class="btn btn-danger" onclick="removeProduct(${product.id})">Удалить</button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -2227,6 +2350,45 @@
             }
         }
 
+        // Обновление опций подкатегорий при добавлении товара
+        function updateSubcategoryOptions() {
+            const category = document.getElementById('product-category').value;
+            const subcategorySelect = document.getElementById('product-subcategory');
+            
+            // Очищаем опции
+            subcategorySelect.innerHTML = '<option value="">Не выбрано</option>';
+            
+            // Если у категории есть подкатегории, добавляем их
+            if (category && subcategories[category]) {
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subcategorySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Обновление опций подкатегорий при редактировании товара
+        function updateEditSubcategoryOptions() {
+            const category = document.getElementById('edit-product-category').value;
+            const subcategorySelect = document.getElementById('edit-product-subcategory');
+            
+            // Очищаем опции
+            subcategorySelect.innerHTML = '<option value="">Не выбрано</option>';
+            
+            // Если у категории есть подкатегории, добавляем их
+            if (category && subcategories[category]) {
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subcategorySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Добавление товара
         function addProduct(event) {
             event.preventDefault();
             
@@ -2255,6 +2417,82 @@
             renderAdminProducts();
         }
 
+        // Редактирование товара
+        function editProduct(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) {
+                showToast('Товар не найден');
+                return;
+            }
+            
+            editingProductId = productId;
+            
+            // Заполняем форму текущими данными
+            document.getElementById('edit-product-name').value = product.name;
+            document.getElementById('edit-product-category').value = product.category;
+            document.getElementById('edit-product-price').value = product.price;
+            document.getElementById('edit-product-image').value = product.image;
+            document.getElementById('edit-product-description').value = product.description || '';
+            document.getElementById('edit-product-characteristics').value = product.characteristics ? product.characteristics.join(', ') : '';
+            
+            // Обновляем опции подкатегорий
+            updateEditSubcategoryOptions();
+            
+            // Устанавливаем значение подкатегории, если она есть
+            if (product.subcategory) {
+                document.getElementById('edit-product-subcategory').value = product.subcategory;
+            }
+            
+            // Показываем модальное окно
+            document.getElementById('edit-product-modal').style.display = 'flex';
+        }
+
+        // Обновление товара
+        function updateProduct(event) {
+            event.preventDefault();
+            
+            const productIndex = allProducts.findIndex(p => p.id === editingProductId);
+            if (productIndex === -1) {
+                showToast('Товар не найден');
+                return;
+            }
+            
+            const characteristics = document.getElementById('edit-product-characteristics').value
+                .split(',')
+                .map(item => item.trim())
+                .filter(item => item);
+            
+            // Обновляем данные товара
+            allProducts[productIndex] = {
+                ...allProducts[productIndex],
+                name: document.getElementById('edit-product-name').value,
+                category: document.getElementById('edit-product-category').value,
+                subcategory: document.getElementById('edit-product-subcategory').value || null,
+                price: parseInt(document.getElementById('edit-product-price').value),
+                image: document.getElementById('edit-product-image').value,
+                description: document.getElementById('edit-product-description').value,
+                characteristics: characteristics
+            };
+            
+            // Сохраняем изменения
+            localStorage.setItem('products', JSON.stringify(allProducts));
+            products = [...allProducts];
+            
+            // Закрываем модальное окно
+            closeEditModal();
+            
+            showToast('Товар обновлен');
+            renderAdminProducts();
+        }
+
+        // Закрытие модального окна редактирования
+        function closeEditModal() {
+            document.getElementById('edit-product-modal').style.display = 'none';
+            document.getElementById('edit-product-form').reset();
+            editingProductId = null;
+        }
+
+        // Удаление товара
         function removeProduct(id) {
             if (confirm('Удалить этот товар?')) {
                 allProducts = allProducts.filter(p => p.id !== id);
