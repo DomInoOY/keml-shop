@@ -294,6 +294,34 @@
             background-color: #2563eb;
         }
 
+        /* Подкатегории */
+        .subcategories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .subcategory-btn {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .subcategory-btn:hover {
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .subcategory-btn.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+
         /* Пагинация */
         .pagination {
             display: flex;
@@ -987,6 +1015,13 @@
                     <button class="filter-btn" onclick="filterByCategory('Apple техника')">Apple техника</button>
                 </div>
 
+                <!-- Подкатегории для жевательного табака -->
+                <div id="snus-subcategories" class="subcategories hidden">
+                    <button class="subcategory-btn active" onclick="filterBySubcategory('all')">Все</button>
+                    <button class="subcategory-btn" onclick="filterBySubcategory('Бестабачный')">Бестабачный</button>
+                    <button class="subcategory-btn" onclick="filterBySubcategory('Табачный')">Табачный</button>
+                </div>
+
                 <div id="products-grid" class="products-grid"></div>
                 <div id="pagination" class="pagination"></div>
             </div>
@@ -1174,6 +1209,14 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="product-subcategory">Подкатегория (для жевательного табака)</label>
+                            <select id="product-subcategory">
+                                <option value="">Не выбрано</option>
+                                <option value="Бестабачный">Бестабачный</option>
+                                <option value="Табачный">Табачный</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="product-price">Цена</label>
                             <input type="number" id="product-price" required>
                         </div>
@@ -1251,6 +1294,7 @@
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
         let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
         let currentFilter = 'all';
+        let currentSubcategory = 'all';
         let currentProduct = null;
         let currentPage = 1;
         const itemsPerPage = 6;
@@ -1405,6 +1449,7 @@
                         id: 9,
                         name: "Siberia Snus White Dry",
                         category: "Жевательный табак",
+                        subcategory: "Табачный",
                         price: 350,
                         image: "https://images.unsplash.com/photo-1583585633625-2de4d4f8b7b1?w=400&h=400&fit=crop",
                         description: "Крепкий жевательный табак Siberia",
@@ -1414,6 +1459,7 @@
                         id: 10,
                         name: "Lyft Freeze X-Strong",
                         category: "Жевательный табак",
+                        subcategory: "Бестабачный",
                         price: 400,
                         image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
                         description: "Безтабачный никотиновый пакетик",
@@ -1587,6 +1633,7 @@
             }
             
             currentFilter = category;
+            currentSubcategory = 'all';
             currentPage = 1;
             
             // Переходим на страницу каталога
@@ -1600,6 +1647,14 @@
                         btn.classList.add('active');
                     }
                 });
+                
+                // Показываем или скрываем подкатегории для жевательного табака
+                const subcategoriesDiv = document.getElementById('snus-subcategories');
+                if (category === 'Жевательный табак') {
+                    subcategoriesDiv.classList.remove('hidden');
+                } else {
+                    subcategoriesDiv.classList.add('hidden');
+                }
             }, 100);
         }
 
@@ -1608,6 +1663,7 @@
             console.log('Фильтрация по категории:', category);
             
             currentFilter = category;
+            currentSubcategory = 'all';
             
             // Обновить активную кнопку
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1634,6 +1690,51 @@
             }
             
             console.log('Отфильтровано товаров:', products.length);
+            
+            // Показываем или скрываем подкатегории для жевательного табака
+            const subcategoriesDiv = document.getElementById('snus-subcategories');
+            if (category === 'Жевательный табак') {
+                subcategoriesDiv.classList.remove('hidden');
+            } else {
+                subcategoriesDiv.classList.add('hidden');
+            }
+            
+            currentPage = 1;
+            renderProducts();
+        }
+
+        // Фильтрация по подкатегории (для жевательного табака)
+        function filterBySubcategory(subcategory) {
+            console.log('Фильтрация по подкатегории:', subcategory);
+            
+            currentSubcategory = subcategory;
+            
+            // Обновляем активную кнопку подкатегории
+            document.querySelectorAll('.subcategory-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Если event не доступен, ищем по тексту
+                document.querySelectorAll('.subcategory-btn').forEach(btn => {
+                    if (btn.textContent.includes(subcategory) || (subcategory === 'all' && btn.textContent.includes('Все'))) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            // Фильтруем товары по подкатегории
+            if (subcategory === 'all') {
+                products = allProducts.filter(p => p.category === 'Жевательный табак');
+            } else {
+                products = allProducts.filter(p => 
+                    p.category === 'Жевательный табак' && p.subcategory === subcategory
+                );
+            }
+            
+            console.log('Отфильтровано товаров по подкатегории:', products.length);
             
             currentPage = 1;
             renderProducts();
@@ -2073,6 +2174,7 @@
                 <div class="admin-product-card">
                     <h4>${product.name}</h4>
                     <p>Категория: ${product.category}</p>
+                    ${product.subcategory ? `<p>Подкатегория: ${product.subcategory}</p>` : ''}
                     <p>Цена: ${product.price} ₽</p>
                     <button class="btn btn-danger" onclick="removeProduct(${product.id})">Удалить</button>
                 </div>
@@ -2137,6 +2239,7 @@
                 id: Date.now(),
                 name: document.getElementById('product-name').value,
                 category: document.getElementById('product-category').value,
+                subcategory: document.getElementById('product-subcategory').value || null,
                 price: parseInt(document.getElementById('product-price').value),
                 image: document.getElementById('product-image').value,
                 description: document.getElementById('product-description').value,
