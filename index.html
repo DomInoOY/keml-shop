@@ -515,6 +515,30 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
+        /* Чекбокс подтверждения возраста */
+        .age-confirmation {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: rgba(239, 68, 68, 0.1);
+            border-radius: 0.5rem;
+            border-left: 4px solid #ef4444;
+        }
+
+        .age-confirmation input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.75rem;
+            transform: scale(1.2);
+        }
+
+        .age-confirmation label {
+            margin-bottom: 0;
+            color: #212529;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
         /* Админ-панель */
         .admin-stats {
             display: grid;
@@ -648,6 +672,12 @@
 
         .footer-content p {
             color: #ffffff;
+        }
+
+        .age-warning {
+            color: #ef4444;
+            font-weight: bold;
+            margin-top: 10px;
         }
 
         .telegram-btn {
@@ -1015,6 +1045,13 @@
                             <label for="comment">Комментарий</label>
                             <textarea id="comment" rows="3"></textarea>
                         </div>
+                        
+                        <!-- Подтверждение возраста -->
+                        <div class="age-confirmation">
+                            <input type="checkbox" id="age-confirm" required>
+                            <label for="age-confirm">Я подтверждаю, что мне есть 18 лет</label>
+                        </div>
+                        
                         <button type="submit" class="btn">Оформить заказ</button>
                     </form>
                 </div>
@@ -1171,7 +1208,7 @@
                 <div>
                     <p>Контакты: <a href="https://t.me/keml_manager" target="_blank">@keml_manager</a></p>
                     <p>Время работы: 9:00-23:00 МСК</p>
-                    <p style="margin-top: 10px; font-weight: bold;">Мы не реализуем продукцию лицам младше 18 лет!</p>
+                    <p class="age-warning">Мы не реализуем продукцию лицам младше 18 лет!</p>
                 </div>
                 <div>
                     <a href="https://t.me/keml_manager" target="_blank" class="telegram-btn">Связь с менеджером</a>
@@ -1852,6 +1889,13 @@
         // Обработка отправки формы заказа
         async function handleOrderSubmit(e) {
             e.preventDefault();
+            
+            // Проверка подтверждения возраста
+            const ageConfirmed = document.getElementById('age-confirm').checked;
+            if (!ageConfirmed) {
+                showToast('Вы должны подтвердить, что вам есть 18 лет', 'error');
+                return;
+            }
             
             const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
             
