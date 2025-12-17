@@ -81,6 +81,96 @@
             color: #3b82f6;
         }
 
+        /* Бургер-меню */
+        .burger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .burger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Анимация бургера в крестик */
+        .burger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .burger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            text-align: center;
+        }
+
+        .mobile-menu li {
+            margin: 1.5rem 0;
+        }
+
+        .mobile-menu a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .mobile-menu a:hover {
+            color: #3b82f6;
+        }
+
+        /* Кнопка закрытия мобильного меню */
+        .close-menu {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            color: #ffffff;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-menu:hover {
+            color: #3b82f6;
+        }
+
         main {
             flex: 1;
             padding: 2rem 0;
@@ -822,9 +912,12 @@
         }
 
         @media (max-width: 768px) {
+            .burger {
+                display: flex;
+            }
+
             .nav-menu {
-                gap: 1rem;
-                font-size: 0.9rem;
+                display: none;
             }
 
             .hero h1 {
@@ -861,6 +954,27 @@
 
             .edit-modal-content {
                 padding: 1.5rem;
+            }
+
+            .categories {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .product-detail {
+                gap: 1.5rem;
+            }
+
+            .filters {
+                justify-content: center;
+            }
+
+            .filter-btn {
+                flex: 1;
+                min-width: 120px;
             }
         }
 
@@ -959,6 +1073,14 @@
                     <img src="images/llogo1.png" alt="KEML Logo">
                     <div class="logo-text">KEML</div>
                 </a>
+                
+                <!-- Бургер-меню для мобильных устройств -->
+                <div class="burger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
                 <ul class="nav-menu">
                     <li><a onclick="showPage('home')">Главная</a></li>
                     <li><a onclick="showPage('catalog')">Каталог</a></li>
@@ -969,6 +1091,18 @@
             </nav>
         </div>
     </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="close-menu" onclick="toggleMobileMenu()">✕</div>
+        <ul>
+            <li><a onclick="showPage('home'); toggleMobileMenu()">Главная</a></li>
+            <li><a onclick="showPage('catalog'); toggleMobileMenu()">Каталог</a></li>
+            <li><a onclick="showPage('apple-tech'); toggleMobileMenu()">Apple техника</a></li>
+            <li><a onclick="showPage('about'); toggleMobileMenu()">О нас</a></li>
+            <li><a onclick="showPage('cart'); toggleMobileMenu()">Корзина (<span id="mobile-cart-count">0</span>)</a></li>
+        </ul>
+    </div>
 
     <main>
         <div class="container">
@@ -1402,6 +1536,7 @@
             loadProducts();
             loadTelegramSettings();
             updateCartCount();
+            updateMobileCartCount();
             
             document.getElementById('order-form').addEventListener('submit', handleOrderSubmit);
             
@@ -1685,6 +1820,11 @@
                 loadAdminStats();
             } else if (pageName === 'apple-tech') {
                 document.getElementById('apple-products-grid').innerHTML = '';
+            }
+            
+            // Закрываем мобильное меню при переходе на другую страницу
+            if (window.innerWidth <= 768) {
+                toggleMobileMenu();
             }
         }
 
@@ -1976,12 +2116,18 @@
             
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
+            updateMobileCartCount();
             showToast(`${product.name} добавлен в корзину`);
         }
 
         function updateCartCount() {
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             document.getElementById('cart-count').textContent = count;
+        }
+
+        function updateMobileCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('mobile-cart-count').textContent = count;
         }
 
         function renderCart() {
@@ -2021,6 +2167,7 @@
                 }
                 localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartCount();
+                updateMobileCartCount();
                 renderCart();
             }
         }
@@ -2064,6 +2211,7 @@
                 cart = [];
                 localStorage.setItem('cart', JSON.stringify(cart));
                 updateCartCount();
+                updateMobileCartCount();
                 
                 document.getElementById('order-form').reset();
                 
@@ -2507,6 +2655,22 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
+        }
+
+        // Функция для переключения мобильного меню
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const burger = document.querySelector('.burger');
+            
+            mobileMenu.classList.toggle('active');
+            burger.classList.toggle('active');
+            
+            // Блокировка прокрутки страницы при открытом меню
+            if (mobileMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         }
     </script>
 </body>
