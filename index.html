@@ -1494,6 +1494,7 @@
         let currentPage = 1;
         const itemsPerPage = 6;
         let allProducts = [];
+        let firebaseConnected = false;
 
         // Настройки Telegram
         const telegramConfig = {
@@ -1520,71 +1521,16 @@
         };
 
         // Инициализация Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('Скрипт загружен');
-            
-            // Проверка возраста
-            if (!localStorage.getItem('ageConfirmed')) {
-                document.getElementById('age-modal').style.display = 'flex';
-            }
-            
-            // Показываем дисклеймер
-            if (!localStorage.getItem('disclaimerShown')) {
-                document.getElementById('disclaimer-modal').style.display = 'flex';
-            }
-            
-            // Загрузка товаров
-            loadProducts();
-            
-            // Загрузка настроек Telegram
-            loadTelegramSettings();
-            
-            // Обновление корзины
-            updateCartCount();
-            updateMobileCartCount();
-            
-            // Обработчик формы заказа
-            document.getElementById('order-form').addEventListener('submit', handleOrderSubmit);
-            
-            // Обработчик формы добавления товара
-            const addProductForm = document.getElementById('add-product-form');
-            if (addProductForm) {
-                addProductForm.addEventListener('submit', addProduct);
-            }
-            
-            // Обработчик формы редактирования товара
-            const editProductForm = document.getElementById('edit-product-form');
-            if (editProductForm) {
-                editProductForm.addEventListener('submit', updateProduct);
-            }
-            
-            // Обработчик формы отзыва
-            const reviewForm = document.getElementById('add-review-form');
-            if (reviewForm) {
-                reviewForm.addEventListener('submit', addReview);
-            }
-            
-            // Обработчик настроек Telegram
-            const telegramSettingsForm = document.getElementById('telegram-settings-form');
-            if (telegramSettingsForm) {
-                telegramSettingsForm.addEventListener('submit', saveTelegramSettings);
-            }
-            
-            // Секретная комбинация для админ-панели
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                    e.preventDefault();
-                    showAdminPage();
-                }
-            });
-            
-            // Загрузка статистики для админ-панели
-            loadAdminStats();
-        });
+        let database;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            firebaseConnected = true;
+            console.log('Firebase успешно инициализирован');
+        } catch (error) {
+            console.error('Ошибка инициализации Firebase:', error);
+            firebaseConnected = false;
+        }
 
         // Товары по умолчанию
         const defaultProducts = [
@@ -1780,41 +1726,155 @@
             }
         ];
 
-        // Функция загрузки товаров
-        function loadProducts() {
-            console.log('Загрузка товаров из Firebase...');
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Скрипт загружен');
             
-            database.ref('products').once('value')
-                .then((snapshot) => {
-                    console.log('Данные получены из Firebase:', snapshot.val());
-                    const data = snapshot.val();
-                    if (data) {
-                        // Преобразуем объект в массив
-                        allProducts = Object.keys(data).map(key => ({
-                            id: key,
-                            ...data[key]
-                        }));
-                        console.log('Товары преобразованы в массив:', allProducts);
-                    } else {
-                        console.log('Данных нет, используем товары по умолчанию');
-                        allProducts = [...defaultProducts];
-                        // Сохраняем товары по умолчанию в Firebase
-                        saveProductsToFirebase(allProducts);
-                    }
-                    products = [...allProducts];
-                    renderProducts();
-                })
-                .catch((error) => {
-                    console.error("Ошибка загрузки товаров:", error);
-                    // В случае ошибки используем товары по умолчанию
+            // Проверка возраста
+            if (!localStorage.getItem('ageConfirmed')) {
+                document.getElementById('age-modal').style.display = 'flex';
+            }
+            
+            // Показываем дисклеймер
+            if (!localStorage.getItem('disclaimerShown')) {
+                document.getElementById('disclaimer-modal').style.display = 'flex';
+            }
+            
+            // Загрузка товаров
+            loadProducts();
+            
+            // Загрузка настроек Telegram
+            loadTelegramSettings();
+            
+            // Обновление корзины
+            updateCartCount();
+            updateMobileCartCount();
+            
+            // Обработчик формы заказа
+            document.getElementById('order-form').addEventListener('submit', handleOrderSubmit);
+            
+            // Обработчик формы добавления товара
+            const addProductForm = document.getElementById('add-product-form');
+            if (addProductForm) {
+                addProductForm.addEventListener('submit', addProduct);
+            }
+            
+            // Обработчик формы редактирования товара
+            const editProductForm = document.getElementById('edit-product-form');
+            if (editProductForm) {
+                editProductForm.addEventListener('submit', updateProduct);
+            }
+            
+            // Обработчик формы отзыва
+            const reviewForm = document.getElementById('add-review-form');
+            if (reviewForm) {
+                reviewForm.addEventListener('submit', addReview);
+            }
+            
+            // Обработчик настроек Telegram
+            const telegramSettingsForm = document.getElementById('telegram-settings-form');
+            if (telegramSettingsForm) {
+                telegramSettingsForm.addEventListener('submit', saveTelegramSettings);
+            }
+            
+            // Секретная комбинация для админ-панели
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    e.preventDefault();
+                    showAdminPage();
+                }
+            });
+            
+            // Загрузка статистики для админ-панели
+            loadAdminStats();
+        });
+
+        // Функция загрузки товаров из localStorage и Firebase
+        function loadProducts() {
+            console.log('Загрузка товаров...');
+            
+            // Сначала пробуем загрузить из localStorage
+            const storedProducts = localStorage.getItem('allProducts');
+            if (storedProducts) {
+                try {
+                    allProducts = JSON.parse(storedProducts);
+                    console.log('Товары загружены из localStorage:', allProducts.length);
+                } catch (e) {
+                    console.error('Ошибка загрузки товаров из localStorage:', e);
                     allProducts = [...defaultProducts];
-                    products = [...allProducts];
-                    renderProducts();
-                });
+                }
+            } else {
+                // Если в localStorage нет, используем товары по умолчанию
+                allProducts = [...defaultProducts];
+                console.log('Используем товары по умолчанию:', allProducts.length);
+            }
+            
+            // Если Firebase подключен, пробуем синхронизировать
+            if (firebaseConnected && database) {
+                database.ref('products').once('value')
+                    .then((snapshot) => {
+                        console.log('Данные получены из Firebase:', snapshot.val());
+                        const data = snapshot.val();
+                        
+                        if (data) {
+                            // Преобразуем объект в массив
+                            const firebaseProducts = Object.keys(data).map(key => ({
+                                id: key,
+                                ...data[key]
+                            }));
+                            
+                            // Объединяем с локальными товарами, избегая дубликатов
+                            const mergedProducts = [...allProducts];
+                            firebaseProducts.forEach(fbProduct => {
+                                if (!mergedProducts.find(p => p.id === fbProduct.id)) {
+                                    mergedProducts.push(fbProduct);
+                                }
+                            });
+                            
+                            allProducts = mergedProducts;
+                            console.log('Товары объединены с Firebase:', allProducts.length);
+                        } else {
+                            // Если в Firebase нет данных, сохраняем туда наши товары
+                            saveProductsToFirebase(allProducts);
+                        }
+                        
+                        // Сохраняем обновленный список в localStorage
+                        saveProductsToStorage();
+                        
+                        // Обновляем отображение
+                        products = [...allProducts];
+                        renderProducts();
+                    })
+                    .catch((error) => {
+                        console.error("Ошибка загрузки товаров из Firebase:", error);
+                        // В случае ошибки используем только локальные данные
+                        products = [...allProducts];
+                        renderProducts();
+                    });
+            } else {
+                // Если Firebase не подключен, используем только локальные данные
+                products = [...allProducts];
+                renderProducts();
+            }
+        }
+
+        // Функция сохранения товаров в localStorage
+        function saveProductsToStorage() {
+            try {
+                localStorage.setItem('allProducts', JSON.stringify(allProducts));
+                console.log('Товары сохранены в localStorage');
+            } catch (e) {
+                console.error('Ошибка сохранения товаров в localStorage:', e);
+            }
         }
 
         // Функция сохранения товаров в Firebase
         function saveProductsToFirebase(products) {
+            if (!firebaseConnected || !database) {
+                console.log('Firebase не подключен, не сохраняем товары');
+                return;
+            }
+            
             console.log('Сохранение товаров в Firebase...');
             const productsObj = {};
             products.forEach(product => {
@@ -2050,12 +2110,12 @@
             const paginatedProducts = products.slice(startIndex, endIndex);
             
             grid.innerHTML = paginatedProducts.map(product => `
-                <div class="product-card" onclick="showProduct(${product.id})">
+                <div class="product-card" onclick="showProduct('${product.id}')">
                     <img src="${product.image}" alt="${product.name}" class="product-image">
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">${product.price} ₽</div>
-                        <button class="btn" onclick="event.stopPropagation(); addToCart(${product.id})">В корзину</button>
+                        <button class="btn" onclick="event.stopPropagation(); addToCart('${product.id}')">В корзину</button>
                     </div>
                 </div>
             `).join('');
@@ -2086,15 +2146,16 @@
 
         // Показать страницу товара
         function showProduct(productId) {
+            // Ищем товар сначала в текущем отфильтрованном массиве
             currentProduct = products.find(p => p.id === productId);
             
-            // Если товар не найден в текущем фильтре, ищем во всех товарах
+            // Если не найден, ищем в полном массиве
             if (!currentProduct) {
                 currentProduct = allProducts.find(p => p.id === productId);
             }
             
             if (!currentProduct) {
-                showToast('Товар не найден');
+                showToast('Товар не найден', 'error');
                 return;
             }
             
@@ -2116,7 +2177,7 @@
                         <input type="number" id="product-quantity" class="quantity-input" value="1" min="1" max="99">
                         <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
                     </div>
-                    <button class="btn" onclick="addToCart(${currentProduct.id})">Добавить в корзину</button>
+                    <button class="btn" onclick="addToCart('${currentProduct.id}')">Добавить в корзину</button>
                 </div>
             `;
             
@@ -2177,20 +2238,42 @@
 
         // Добавление в корзину
         function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            const quantity = document.getElementById('product-quantity') 
-                ? parseInt(document.getElementById('product-quantity').value) 
-                : 1;
+            console.log('Добавление в корзину товара с ID:', productId);
+            
+            // Ищем товар сначала в текущем отфильтрованном массиве
+            let product = products.find(p => p.id === productId);
+            
+            // Если не найден, ищем в полном массиве
+            if (!product) {
+                product = allProducts.find(p => p.id === productId);
+            }
+            
+            // Если товар все еще не найден, показываем ошибку
+            if (!product) {
+                console.error('Товар не найден в массивах. ID:', productId);
+                console.log('Текущие товары в products:', products);
+                console.log('Все товары в allProducts:', allProducts);
+                showToast('Товар не найден', 'error');
+                return;
+            }
+            
+            // Получаем количество товара (если находимся на странице товара)
+            const quantityInput = document.getElementById('product-quantity');
+            const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+            
+            console.log('Добавляем товар:', product.name, 'Количество:', quantity);
             
             const existingItem = cart.find(item => item.id === productId);
             
             if (existingItem) {
                 existingItem.quantity += quantity;
+                console.log('Товар уже в корзине, обновляем количество:', existingItem.quantity);
             } else {
                 cart.push({
                     ...product,
                     quantity: quantity
                 });
+                console.log('Товар добавлен в корзину');
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -2228,9 +2311,9 @@
                     <div class="cart-item-name">${item.name}</div>
                     <div class="cart-item-price">${item.price} ₽</div>
                     <div class="cart-quantity">
-                        <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, -1)">-</button>
+                        <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', -1)">-</button>
                         <span>${item.quantity}</span>
-                        <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, 1)">+</button>
+                        <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', 1)">+</button>
                     </div>
                     <div class="cart-item-total">${item.price * item.quantity} ₽</div>
                 </div>
@@ -2573,18 +2656,37 @@
             // Генерируем уникальный ID
             const productId = Date.now().toString();
             
-            // Добавляем товар в Firebase
-            database.ref('products/' + productId).set(newProduct)
-                .then(() => {
-                    console.log('Товар успешно добавлен');
-                    showToast('Товар добавлен');
-                    document.getElementById('add-product-form').reset();
-                    loadProducts(); // Обновляем список товаров
-                })
-                .catch((error) => {
-                    console.error("Ошибка добавления товара:", error);
-                    showToast('Ошибка добавления товара: ' + error.message, 'error');
-                });
+            // Добавляем товар в локальный массив
+            const productToAdd = {
+                id: productId,
+                ...newProduct
+            };
+            
+            allProducts.push(productToAdd);
+            
+            // Сохраняем в localStorage
+            saveProductsToStorage();
+            
+            // Сохраняем в Firebase если подключен
+            if (firebaseConnected && database) {
+                database.ref('products/' + productId).set(newProduct)
+                    .then(() => {
+                        console.log('Товар успешно добавлен в Firebase');
+                        showToast('Товар добавлен');
+                        document.getElementById('add-product-form').reset();
+                        renderAdminProducts();
+                    })
+                    .catch((error) => {
+                        console.error("Ошибка добавления товара в Firebase:", error);
+                        showToast('Ошибка добавления товара в Firebase, но товар добавлен локально', 'error');
+                        renderAdminProducts();
+                    });
+            } else {
+                console.log('Firebase не подключен, товар добавлен только локально');
+                showToast('Товар добавлен (только локально)');
+                document.getElementById('add-product-form').reset();
+                renderAdminProducts();
+            }
         }
 
         // Редактирование товара
@@ -2636,17 +2738,39 @@
                 characteristics: characteristics
             };
             
-            // Обновляем в Firebase
-            database.ref('products/' + editingProductId).update(updatedProduct)
-                .then(() => {
-                    closeEditModal();
-                    showToast('Товар обновлен');
-                    loadProducts(); // Обновляем список
-                })
-                .catch((error) => {
-                    console.error("Ошибка обновления товара:", error);
-                    showToast('Ошибка обновления товара');
-                });
+            // Обновляем в локальном массиве
+            const productIndex = allProducts.findIndex(p => p.id === editingProductId);
+            if (productIndex !== -1) {
+                allProducts[productIndex] = {
+                    id: editingProductId,
+                    ...updatedProduct
+                };
+            }
+            
+            // Сохраняем в localStorage
+            saveProductsToStorage();
+            
+            // Обновляем в Firebase если подключен
+            if (firebaseConnected && database) {
+                database.ref('products/' + editingProductId).update(updatedProduct)
+                    .then(() => {
+                        console.log('Товар успешно обновлен в Firebase');
+                        closeEditModal();
+                        showToast('Товар обновлен');
+                        renderAdminProducts();
+                    })
+                    .catch((error) => {
+                        console.error("Ошибка обновления товара в Firebase:", error);
+                        closeEditModal();
+                        showToast('Ошибка обновления товара в Firebase, но товар обновлен локально', 'error');
+                        renderAdminProducts();
+                    });
+            } else {
+                console.log('Firebase не подключен, товар обновлен только локально');
+                closeEditModal();
+                showToast('Товар обновлен (только локально)');
+                renderAdminProducts();
+            }
         }
 
         // Закрытие модального окна редактирования
@@ -2659,15 +2783,30 @@
         // Удаление товара
         function removeProduct(id) {
             if (confirm('Удалить этот товар?')) {
-                database.ref('products/' + id).remove()
-                    .then(() => {
-                        showToast('Товар удален');
-                        loadProducts(); // Обновляем список
-                    })
-                    .catch((error) => {
-                        console.error("Ошибка удаления товара:", error);
-                        showToast('Ошибка удаления товара');
-                    });
+                // Удаляем из локального массива
+                allProducts = allProducts.filter(p => p.id !== id);
+                
+                // Сохраняем в localStorage
+                saveProductsToStorage();
+                
+                // Удаляем из Firebase если подключен
+                if (firebaseConnected && database) {
+                    database.ref('products/' + id).remove()
+                        .then(() => {
+                            console.log('Товар удален из Firebase');
+                            showToast('Товар удален');
+                            renderAdminProducts();
+                        })
+                        .catch((error) => {
+                            console.error("Ошибка удаления товара из Firebase:", error);
+                            showToast('Ошибка удаления товара из Firebase, но товар удален локально', 'error');
+                            renderAdminProducts();
+                        });
+                } else {
+                    console.log('Firebase не подключен, товар удален только локально');
+                    showToast('Товар удален (только локально)');
+                    renderAdminProducts();
+                }
             }
         }
 
@@ -2776,12 +2915,12 @@
             }
             
             grid.innerHTML = products.map(product => `
-                <div class="product-card" onclick="showProduct(${product.id})">
+                <div class="product-card" onclick="showProduct('${product.id}')">
                     <img src="${product.image}" alt="${product.name}" class="product-image">
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">${product.price} ₽</div>
-                        <button class="btn" onclick="event.stopPropagation(); addToCart(${product.id})">В корзину</button>
+                        <button class="btn" onclick="event.stopPropagation(); addToCart('${product.id}')">В корзину</button>
                     </div>
                 </div>
             `).join('');
