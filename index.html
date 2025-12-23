@@ -1065,36 +1065,36 @@
     <header>
         <div class="container">
             <nav>
-                <a href="#" class="logo" onclick="showPage('home')">
+                <a href="#" class="logo" onclick="window.showPage('home')">
                     <img src="images/llogo1.png" alt="KEML Logo">
                     <div class="logo-text">KEML</div>
                 </a>
                 
-                <div class="burger" onclick="toggleMobileMenu()">
+                <div class="burger" onclick="window.toggleMobileMenu()">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
                 
                 <ul class="nav-menu">
-                    <li><a onclick="showPage('home')">Главная</a></li>
-                    <li><a onclick="showPage('catalog')">Каталог</a></li>
-                    <li><a onclick="showPage('apple-tech')">Apple техника</a></li>
-                    <li><a onclick="showPage('about')">О нас</a></li>
-                    <li><a onclick="showPage('cart')">Корзина (<span id="cart-count">0</span>)</a></li>
+                    <li><a onclick="window.showPage('home')">Главная</a></li>
+                    <li><a onclick="window.showPage('catalog')">Каталог</a></li>
+                    <li><a onclick="window.showPage('apple-tech')">Apple техника</a></li>
+                    <li><a onclick="window.showPage('about')">О нас</a></li>
+                    <li><a onclick="window.showPage('cart')">Корзина (<span id="cart-count">0</span>)</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <div class="mobile-menu" id="mobile-menu">
-        <div class="close-menu" onclick="toggleMobileMenu()">✕</div>
+        <div class="close-menu" onclick="window.toggleMobileMenu()">✕</div>
         <ul>
-            <li><a onclick="showPage('home'); toggleMobileMenu()">Главная</a></li>
-            <li><a onclick="showPage('catalog'); toggleMobileMenu()">Каталог</a></li>
-            <li><a onclick="showPage('apple-tech'); toggleMobileMenu()">Apple техника</a></li>
-            <li><a onclick="showPage('about'); toggleMobileMenu()">О нас</a></li>
-            <li><a onclick="showPage('cart'); toggleMobileMenu()">Корзина (<span id="mobile-cart-count">0</span>)</a></li>
+            <li><a onclick="window.showPage('home'); window.toggleMobileMenu()">Главная</a></li>
+            <li><a onclick="window.showPage('catalog'); window.toggleMobileMenu()">Каталог</a></li>
+            <li><a onclick="window.showPage('apple-tech'); window.toggleMobileMenu()">Apple техника</a></li>
+            <li><a onclick="window.showPage('about'); window.toggleMobileMenu()">О нас</a></li>
+            <li><a onclick="window.showPage('cart'); window.toggleMobileMenu()">Корзина (<span id="mobile-cart-count">0</span>)</a></li>
         </ul>
     </div>
 
@@ -1105,35 +1105,35 @@
                     <h1>Keml Shop</h1>
                     <p>Лучшие товары для вейпинга и Apple техники</p>
                     <br>
-                    <button class="btn" onclick="showPage('catalog')">Перейти в каталог</button>
+                    <button class="btn" onclick="window.showPage('catalog')">Перейти в каталог</button>
                 </section>
 
                 <section class="categories">
-                    <div class="category-card" onclick="goToCategory('Одноразовые сигареты')">
+                    <div class="category-card" onclick="window.goToCategory('Одноразовые сигареты')">
                         <img src="images/kml odn.jpg" alt="Одноразовые сигареты" class="category-image">
                         <h3>Одноразовые сигареты</h3>
                     </div>
-                    <div class="category-card" onclick="goToCategory('Жидкости для вейпа')">
+                    <div class="category-card" onclick="window.goToCategory('Жидкости для вейпа')">
                         <img src="images/kml jij.jpg" alt="Жидкости для вейпа" class="category-image">
                         <h3>Жидкости для вейпа</h3>
                     </div>
-                    <div class="category-card" onclick="goToCategory('Pod-системы')">
+                    <div class="category-card" onclick="window.goToCategory('Pod-системы')">
                         <img src="images/kml pod.jpg" alt="Pod-системы" class="category-image">
                         <h3>Pod-системы</h3>
                     </div>
-                    <div class="category-card" onclick="goToCategory('Картриджи')">
+                    <div class="category-card" onclick="window.goToCategory('Картриджи')">
                         <img src="images/kml krdjpg.jpg" alt="Картриджи" class="category-image">
                         <h3>Картриджи</h3>
                     </div>
-                    <div class="category-card" onclick="goToCategory('Жевательный табак')">
+                    <div class="category-card" onclick="window.goToCategory('Жевательный табак')">
                         <img src="images/kml snu.jpg" alt="Жевательный табак" class="category-image">
                         <h3>Жевательный табак</h3>
                     </div>
-                    <div class="category-card" onclick="goToCategory('Аксессуары и прочее')">
+                    <div class="category-card" onclick="window.goToCategory('Аксессуары и прочее')">
                         <div class="category-icon">🔧</div>
                         <h3>Аксессуары и прочее</h3>
                     </div>
-                    <div class="category-card" onclick="showPage('apple-tech')">
+                    <div class="category-card" onclick="window.showPage('apple-tech')">
                         <img src="images/app.jpg" alt="Apple техника" class="category-image">
                         <h3>Apple техника</h3>
                     </div>
@@ -1144,13 +1144,13 @@
                 <h2 style="margin-bottom: 2rem; color: #ffffff;">Каталог товаров</h2>
                 
                 <div class="search-container">
-                    <input type="text" id="search-input" class="search-input" placeholder="Поиск товаров..." onkeyup="searchProducts()">
-                    <button class="btn" onclick="clearSearch()">Очистить</button>
+                    <input type="text" id="search-input" class="search-input" placeholder="Поиск товаров..." onkeyup="window.searchProducts()">
+                    <button class="btn" onclick="window.clearSearch()">Очистить</button>
                 </div>
                 
                 <div class="sort-container">
                     <label for="sort-select">Сортировка:</label>
-                    <select id="sort-select" class="sort-select" onchange="sortProducts()">
+                    <select id="sort-select" class="sort-select" onchange="window.sortProducts()">
                         <option value="default">По умолчанию</option>
                         <option value="price-asc">Цена: по возрастанию</option>
                         <option value="price-desc">Цена: по убыванию</option>
@@ -1159,20 +1159,20 @@
                 </div>
                 
                 <div class="filters">
-                    <button class="filter-btn active" onclick="filterByCategory('all')">Все товары</button>
-                    <button class="filter-btn" onclick="filterByCategory('Одноразовые сигареты')">Одноразовые сигареты</button>
-                    <button class="filter-btn" onclick="filterByCategory('Жидкости для вейпа')">Жидкости для вейпа</button>
-                    <button class="filter-btn" onclick="filterByCategory('Pod-системы')">Pod-системы</button>
-                    <button class="filter-btn" onclick="filterByCategory('Картриджи')">Картриджи</button>
-                    <button class="filter-btn" onclick="filterByCategory('Жевательный табак')">Жевательный табак</button>
-                    <button class="filter-btn" onclick="filterByCategory('Аксессуары и прочее')">Аксессуары и прочее</button>
-                    <button class="filter-btn" onclick="filterByCategory('Apple техника')">Apple техника</button>
+                    <button class="filter-btn active" onclick="window.filterByCategory('all')">Все товары</button>
+                    <button class="filter-btn" onclick="window.filterByCategory('Одноразовые сигареты')">Одноразовые сигареты</button>
+                    <button class="filter-btn" onclick="window.filterByCategory('Жидкости для вейпа')">Жидкости для вейпа</button>
+                    <button class="filter-btn" onclick="window.filterByCategory('Pod-системы')">Pod-системы</button>
+                    <button class="filter-btn" onclick="window.filterByCategory('Картриджи')">Картриджи</button>
+                    <button class="filter-btn" onclick="window.filterByCategory('Жевательный табак')">Жевательный табак</button>
+                    <button class="filter-btn" onclick="window.filterByCategory('Аксессуары и прочее')">Аксессуары и прочее</button>
+                    <button class="filter-btn" onclick="window.filterByCategory('Apple техника')">Apple техника</button>
                 </div>
 
                 <div id="snus-subcategories" class="subcategories hidden">
-                    <button class="subcategory-btn active" onclick="filterBySubcategory('all')">Все</button>
-                    <button class="subcategory-btn" onclick="filterBySubcategory('Бестабачный')">Бестабачный</button>
-                    <button class="subcategory-btn" onclick="filterBySubcategory('Табачный')">Табачный</button>
+                    <button class="subcategory-btn active" onclick="window.filterBySubcategory('all')">Все</button>
+                    <button class="subcategory-btn" onclick="window.filterBySubcategory('Бестабачный')">Бестабачный</button>
+                    <button class="subcategory-btn" onclick="window.filterBySubcategory('Табачный')">Табачный</button>
                 </div>
 
                 <div id="products-grid" class="products-grid"></div>
@@ -1180,7 +1180,7 @@
             </div>
 
             <div id="product-page" class="page">
-                <button class="btn" onclick="showPage('catalog')" style="margin-bottom: 2rem;">← Назад в каталог</button>
+                <button class="btn" onclick="window.showPage('catalog')" style="margin-bottom: 2rem;">← Назад в каталог</button>
                 <div id="product-detail" class="product-detail"></div>
                 
                 <div class="reviews-section">
@@ -1246,10 +1246,10 @@
                 <h2 style="margin-bottom: 2rem;">Apple техника</h2>
                 
                 <div class="apple-categories">
-                    <button class="btn" onclick="showAppleCategory('iphones')">Айфоны</button>
-                    <button class="btn" onclick="showAppleCategory('macbooks')">Макбуки</button>
-                    <button class="btn" onclick="showAppleCategory('ipads')">Айпады</button>
-                    <button class="btn" onclick="showAppleCategory('headphones')">Наушники</button>
+                    <button class="btn" onclick="window.showAppleCategory('iphones')">Айфоны</button>
+                    <button class="btn" onclick="window.showAppleCategory('macbooks')">Макбуки</button>
+                    <button class="btn" onclick="window.showAppleCategory('ipads')">Айпады</button>
+                    <button class="btn" onclick="window.showAppleCategory('headphones')">Наушники</button>
                 </div>
                 
                 <div id="apple-products-grid" class="products-grid"></div>
@@ -1312,7 +1312,7 @@
 
                 <div style="margin-bottom: 2rem;">
                     <h3>Тестирование уведомлений</h3>
-                    <button class="btn" onclick="testTelegramNotification()">Отправить тестовое уведомление</button>
+                    <button class="btn" onclick="window.testTelegramNotification()">Отправить тестовое уведомление</button>
                 </div>
 
                 <div style="margin-bottom: 2rem;">
@@ -1343,7 +1343,7 @@
                         </div>
                         <div class="form-group">
                             <label for="product-category">Категория</label>
-                            <select id="product-category" required onchange="updateSubcategoryOptions()">
+                            <select id="product-category" required onchange="window.updateSubcategoryOptions()">
                                 <option value="">Выберите категорию</option>
                                 <option value="Одноразовые сигареты">Одноразовые сигареты</option>
                                 <option value="Жидкости для вейпа">Жидкости для вейпа</option>
@@ -1409,8 +1409,8 @@
         <div class="modal-content">
             <h2>Вам есть 18 лет?</h2>
             <div class="modal-buttons">
-                <button class="btn" onclick="confirmAge(true)">Да</button>
-                <button class="btn" style="background-color: #ef4444;" onclick="confirmAge(false)">Нет</button>
+                <button class="btn" onclick="window.confirmAge(true)">Да</button>
+                <button class="btn" style="background-color: #ef4444;" onclick="window.confirmAge(false)">Нет</button>
             </div>
         </div>
     </div>
@@ -1420,7 +1420,7 @@
             <h2>Важная информация</h2>
             <p>Вся информация на сайте носит информационный характер и не является рекламой. Мы не реализуем никотиносодержащую продукцию и устройства для её потребления дистанционно.</p>
             <div class="modal-buttons">
-                <button class="btn" onclick="closeDisclaimer()">Понятно</button>
+                <button class="btn" onclick="window.closeDisclaimer()">Понятно</button>
             </div>
         </div>
     </div>
@@ -1435,7 +1435,7 @@
                 </div>
                 <div class="form-group">
                     <label for="edit-product-category">Категория</label>
-                    <select id="edit-product-category" required onchange="updateEditSubcategoryOptions()">
+                    <select id="edit-product-category" required onchange="window.updateEditSubcategoryOptions()">
                         <option value="">Выберите категорию</option>
                         <option value="Одноразовые сигареты">Одноразовые сигареты</option>
                         <option value="Жидкости для вейпа">Жидкости для вейпа</option>
@@ -1469,7 +1469,7 @@
                     <input type="text" id="edit-product-characteristics">
                 </div>
                 <div class="edit-modal-buttons">
-                    <button type="button" class="btn btn-danger" onclick="closeEditModal()">Отмена</button>
+                    <button type="button" class="btn btn-danger" onclick="window.closeEditModal()">Отмена</button>
                     <button type="submit" class="btn">Сохранить</button>
                 </div>
             </form>
@@ -2204,12 +2204,12 @@
             const paginatedProducts = products.slice(startIndex, endIndex);
             
             grid.innerHTML = paginatedProducts.map(product => `
-                <div class="product-card" onclick="showProduct('${product.id}')">
+                <div class="product-card" onclick="window.showProduct('${product.id}')">
                     <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">${product.price} ₽</div>
-                        <button class="btn" onclick="event.stopPropagation(); addToCart('${product.id}')">В корзину</button>
+                        <button class="btn" onclick="event.stopPropagation(); window.addToCart('${product.id}')">В корзину</button>
                     </div>
                 </div>
             `).join('');
@@ -2225,7 +2225,7 @@
             
             if (totalPages > 1) {
                 for (let i = 1; i <= totalPages; i++) {
-                    html += `<button class="btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                    html += `<button class="btn ${i === currentPage ? 'active' : ''}" onclick="window.changePage(${i})">${i}</button>`;
                 }
             }
             
@@ -2267,11 +2267,11 @@
                         ${currentProduct.characteristics.map(char => `<li>${char}</li>`).join('')}
                     </ul>
                     <div class="quantity-selector">
-                        <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                        <button class="quantity-btn" onclick="window.changeQuantity(-1)">-</button>
                         <input type="number" id="product-quantity" class="quantity-input" value="1" min="1" max="99">
-                        <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                        <button class="quantity-btn" onclick="window.changeQuantity(1)">+</button>
                     </div>
-                    <button class="btn" onclick="addToCart('${currentProduct.id}')">Добавить в корзину</button>
+                    <button class="btn" onclick="window.addToCart('${currentProduct.id}')">Добавить в корзину</button>
                 </div>
             `;
             
@@ -2405,9 +2405,9 @@
                     <div class="cart-item-name">${item.name}</div>
                     <div class="cart-item-price">${item.price} ₽</div>
                     <div class="cart-quantity">
-                        <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', -1)">-</button>
+                        <button class="quantity-btn" onclick="window.updateCartQuantity('${item.id}', -1)">-</button>
                         <span>${item.quantity}</span>
-                        <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', 1)">+</button>
+                        <button class="quantity-btn" onclick="window.updateCartQuantity('${item.id}', 1)">+</button>
                     </div>
                     <div class="cart-item-total">${item.price * item.quantity} ₽</div>
                 </div>
@@ -2624,8 +2624,8 @@
                     ${product.subcategory ? `<p>Подкатегория: ${product.subcategory}</p>` : ''}
                     <p>Цена: ${product.price} ₽</p>
                     <div class="admin-actions">
-                        <button class="btn btn-warning" onclick="editProduct('${product.id}')">Редактировать</button>
-                        <button class="btn btn-danger" onclick="removeProduct('${product.id}')">Удалить</button>
+                        <button class="btn btn-warning" onclick="window.editProduct('${product.id}')">Редактировать</button>
+                        <button class="btn btn-danger" onclick="window.removeProduct('${product.id}')">Удалить</button>
                     </div>
                 </div>
             `).join('');
@@ -2646,7 +2646,7 @@
                         </span>
                     </td>
                     <td>
-                        <select onchange="updateOrderStatus(${order.id}, this.value)">
+                        <select onchange="window.updateOrderStatus(${order.id}, this.value)">
                             <option value="new" ${order.status === 'new' ? 'selected' : ''}>Новый</option>
                             <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>В обработке</option>
                             <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Выполнен</option>
@@ -2681,3 +2681,241 @@
         }
 
         // Обновление опций подкатегорий
+        function updateSubcategoryOptions() {
+            const category = document.getElementById('product-category').value;
+            const subcategorySelect = document.getElementById('product-subcategory');
+            
+            // Очищаем опции
+            subcategorySelect.innerHTML = '<option value="">Не выбрано</option>';
+            
+            // Если у категории есть подкатегории, добавляем их
+            if (category && subcategories[category]) {
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subcategorySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Обновление опций подкатегорий при редактировании
+        function updateEditSubcategoryOptions() {
+            const category = document.getElementById('edit-product-category').value;
+            const subcategorySelect = document.getElementById('edit-product-subcategory');
+            
+            // Очищаем опции
+            subcategorySelect.innerHTML = '<option value="">Не выбрано</option>';
+            
+            // Если у категории есть подкатегории, добавляем их
+            if (category && subcategories[category]) {
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subcategorySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Закрытие модального окна редактирования
+        function closeEditModal() {
+            document.getElementById('edit-product-modal').style.display = 'none';
+            document.getElementById('edit-product-form').reset();
+            editingProductId = null;
+        }
+
+        // Показать категорию Apple
+        function showAppleCategory(subcategory) {
+            // Фильтруем товары по подкатегории
+            const appleProducts = allProducts.filter(p => 
+                p.category === 'Apple техника' && p.subcategory === subcategory
+            );
+            
+            renderAppleProducts(appleProducts);
+        }
+
+        // Рендер товаров Apple
+        function renderAppleProducts(products) {
+            const grid = document.getElementById('apple-products-grid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #6c757d;">Товары не найдены</p>';
+                return;
+            }
+            
+            grid.innerHTML = products.map(product => `
+                <div class="product-card" onclick="window.showProduct('${product.id}')">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">${product.price} ₽</div>
+                        <button class="btn" onclick="event.stopPropagation(); window.addToCart('${product.id}')">В корзину</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Переключение мобильного меню
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const burger = document.querySelector('.burger');
+            
+            mobileMenu.classList.toggle('active');
+            burger.classList.toggle('active');
+            
+            // Блокировка прокрутки страницы при открытом меню
+            if (mobileMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Показать уведомление
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+            }
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Загрузка настроек Telegram
+        function loadTelegramSettings() {
+            const saved = localStorage.getItem('telegramSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                document.getElementById('telegram-token').value = settings.token || '';
+                document.getElementById('telegram-chat-ids').value = settings.chatIds ? settings.chatIds.join(', ') : '';
+            } else {
+                // Устанавливаем значения по умолчанию
+                document.getElementById('telegram-token').value = telegramConfig.token;
+                document.getElementById('telegram-chat-ids').value = telegramConfig.chatIds.join(', ');
+            }
+        }
+
+        // Сохранение настроек Telegram
+        function saveTelegramSettings(e) {
+            e.preventDefault();
+            
+            const token = document.getElementById('telegram-token').value;
+            const chatIdsString = document.getElementById('telegram-chat-ids').value;
+            const chatIds = chatIdsString.split(',').map(id => id.trim()).filter(id => id);
+            
+            const settings = { token, chatIds };
+            
+            localStorage.setItem('telegramSettings', JSON.stringify(settings));
+            
+            // Обновляем глобальную конфигурацию
+            telegramConfig.token = token;
+            telegramConfig.chatIds = chatIds;
+            
+            showToast('Настройки Telegram сохранены!');
+        }
+
+        // Тестовое уведомление
+        async function testTelegramNotification() {
+            const testOrder = {
+                id: Date.now(),
+                name: 'Тестовый клиент',
+                telegram: '@test_user',
+                city: 'Тестовый город',
+                comment: 'Это тестовый заказ',
+                items: [
+                    { name: 'Тестовый товар', quantity: 1, price: 1000, image: 'https://images.unsplash.com/photo-1606756790138-261d2b21cd75?w=400&h=400&fit=crop' }
+                ],
+                total: 1000,
+                date: new Date().toISOString()
+            };
+            
+            try {
+                await sendTelegramNotification(testOrder);
+                showToast('Тестовое уведомление отправлено!');
+            } catch (error) {
+                console.error('Ошибка отправки тестового уведомления:', error);
+                showToast('Ошибка отправки уведомления. Проверьте настройки Telegram.');
+            }
+        }
+
+        // Загрузка статистики для админ-панели
+        function loadAdminStats() {
+            const totalOrders = orders.length;
+            const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+            
+            // Подсчет популярных товаров
+            const productStats = {};
+            orders.forEach(order => {
+                order.items.forEach(item => {
+                    if (!productStats[item.id]) {
+                        productStats[item.id] = { name: item.name, count: 0 };
+                    }
+                    productStats[item.id].count += item.quantity;
+                });
+            });
+            
+            const popularProducts = Object.values(productStats)
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 3);
+            
+            document.getElementById('total-orders').textContent = totalOrders;
+            document.getElementById('total-revenue').textContent = `${totalRevenue} ₽`;
+            
+            const popularProductsHtml = popularProducts.map(item => 
+                `<p>${item.name}: ${item.count} шт.</p>`
+            ).join('');
+            document.getElementById('popular-products').innerHTML = popularProductsHtml;
+        }
+
+        // Явное присвоение функций глобальному объекту для доступа из HTML
+        window.goToCategory = goToCategory;
+        window.showPage = showPage;
+        window.filterByCategory = filterByCategory;
+        window.filterBySubcategory = filterBySubcategory;
+        window.showProduct = showProduct;
+        window.addToCart = addToCart;
+        window.updateCartQuantity = updateCartQuantity;
+        window.changeQuantity = changeQuantity;
+        window.addReview = addReview;
+        window.editProduct = editProduct;
+        window.removeProduct = removeProduct;
+        window.updateOrderStatus = updateOrderStatus;
+        window.showAppleCategory = showAppleCategory;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.confirmAge = confirmAge;
+        window.closeDisclaimer = closeDisclaimer;
+        window.showAdminPage = showAdminPage;
+        window.testTelegramNotification = testTelegramNotification;
+        window.searchProducts = searchProducts;
+        window.clearSearch = clearSearch;
+        window.sortProducts = sortProducts;
+        window.changePage = changePage;
+        window.loadReviews = loadReviews;
+        window.handleOrderSubmit = handleOrderSubmit;
+        window.loadTelegramSettings = loadTelegramSettings;
+        window.saveTelegramSettings = saveTelegramSettings;
+        window.sendTelegramNotification = sendTelegramNotification;
+        window.sendTelegramMessage = sendTelegramMessage;
+        window.sendTelegramPhoto = sendTelegramPhoto;
+        window.renderAdminProducts = renderAdminProducts;
+        window.renderOrders = renderOrders;
+        window.getStatusText = getStatusText;
+        window.loadAdminStats = loadAdminStats;
+        window.updateSubcategoryOptions = updateSubcategoryOptions;
+        window.updateEditSubcategoryOptions = updateEditSubcategoryOptions;
+        window.closeEditModal = closeEditModal;
+        window.showToast = showToast;
+        window.updateCartCount = updateCartCount;
+        window.updateMobileCartCount = updateMobileCartCount;
+        window.renderCart = renderCart;
+        window.renderProducts = renderProducts;
+        window.renderPagination = renderPagination;
+        window.saveProductsToStorage = saveProductsToStorage;
+        window.loadProducts = loadProducts;
+        window.addProduct =
