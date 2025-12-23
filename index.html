@@ -1077,7 +1077,7 @@
                 </div>
                 
                 <ul class="nav-menu">
-                    <li><a>Главная</a></li>
+                    <li><a onclick="window.showPage('home')">Главная</a></li>
                     <li><a onclick="window.showPage('catalog')">Каталог</a></li>
                     <li><a onclick="window.showPage('apple-tech')">Apple техника</a></li>
                     <li><a onclick="window.showPage('about')">О нас</a></li>
@@ -1105,11 +1105,11 @@
                     <h1>Keml Shop</h1>
                     <p>Лучшие товары для вейпинга и Apple техники</p>
                     <br>
-                    <button class="btn">Перейти в каталог</button>
+                    <button class="btn" onclick="window.showPage('catalog')">Перейти в каталог</button>
                 </section>
 
                 <section class="categories">
-                    <div class="category-card">
+                    <div class="category-card" onclick="window.goToCategory('Одноразовые сигареты')">
                         <img src="images/kml odn.jpg" alt="Одноразовые сигареты" class="category-image">
                         <h3>Одноразовые сигареты</h3>
                     </div>
@@ -1483,136 +1483,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
     <script>
-// Делегирование событий для всех кликов
-document.addEventListener('click', function(e) {
-    const target = e.target;
-    
-    // Обработка кликов по категориям
-    if (target.closest('.category-card')) {
-        const card = target.closest('.category-card');
-        const categoryName = Array.from(card.children).find(child => 
-            child.tagName === 'H3'
-        )?.textContent;
-        
-        if (categoryName) {
-            const categoryMap = {
-                'Одноразовые сигареты': 'Одноразовые сигареты',
-                'Жидкости для вейпа': 'Жидкости для вейпа',
-                'Pod-системы': 'Pod-системы',
-                'Картриджи': 'Картриджи',
-                'Жевательный табак': 'Жевательный табак',
-                'Аксессуары и прочее': 'Аксессуары и прочее'
-            };
-            
-            const category = categoryMap[categoryName];
-            if (category) {
-                goToCategory(category);
-            }
-        }
-    }
-    
-    // Обработка кликов по кнопкам "В корзину"
-    if (target.matches('.btn') && target.textContent.includes('В корзину')) {
-        const productCard = target.closest('.product-card');
-        if (productCard) {
-            const productId = productCard.getAttribute('data-product-id');
-            if (productId) {
-                addToCart(productId);
-            }
-        }
-    }
-    
-    // Обработка кликов по фильтрам
-    if (target.classList.contains('filter-btn')) {
-        const category = target.textContent.includes('Все товары') ? 'all' : target.textContent;
-        filterByCategory(category);
-    }
-    
-    // Обработка кликов по подкатегориям
-    if (target.classList.contains('subcategory-btn')) {
-        const subcategory = target.textContent.includes('Все') ? 'all' : target.textContent;
-        filterBySubcategory(subcategory);
-    }
-    
-    // Обработка кликов по товарам
-    if (target.closest('.product-card')) {
-        const productCard = target.closest('.product-card');
-        const productId = productCard.getAttribute('data-product-id');
-        if (productId && !target.matches('.btn')) {
-            showProduct(productId);
-        }
-    }
-    
-    // Обработка кликов по навигации
-    if (target.closest('.nav-menu a')) {
-        const link = target.closest('.nav-menu a');
-        const pageMap = {
-            'Главная': 'home',
-            'Каталог': 'catalog',
-            'Apple техника': 'apple-tech',
-            'О нас': 'about'
-        };
-        
-        const page = pageMap[link.textContent];
-        if (page) {
-            showPage(page);
-        }
-    }
-    
-    // Обработка кликов по мобильному меню
-    if (target.closest('.mobile-menu a')) {
-        const link = target.closest('.mobile-menu a');
-        const pageMap = {
-            'Главная': 'home',
-            'Каталог': 'catalog',
-            'Apple техника': 'apple-tech',
-            'О нас': 'about'
-        };
-        
-        const page = pageMap[link.textContent];
-        if (page) {
-            showPage(page);
-            toggleMobileMenu();
-        }
-    }
-    
-    // Обработка кликов по кнопке "Перейти в каталог"
-    if (target.textContent.includes('Перейти в каталог')) {
-        showPage('catalog');
-    }
-    
-    // Обработка кликов по кнопке "← Назад в каталог"
-    if (target.textContent.includes('← Назад в каталог')) {
-        showPage('catalog');
-    }
-    
-    // Обработка кликов по Apple категориям
-    if (target.closest('.apple-categories .btn')) {
-        const btn = target.closest('.apple-categories .btn');
-        const categoryMap = {
-            'Айфоны': 'iphones',
-            'Макбуки': 'macbooks',
-            'Айпады': 'ipads',
-            'Наушники': 'headphones'
-        };
-        
-        const category = categoryMap[btn.textContent];
-        if (category) {
-            showAppleCategory(category);
-        }
-    }
-});
-
-// Добавляем data-атрибуты для товаров
-document.addEventListener('DOMContentLoaded', function() {
-    // Добавляем data-product-id ко всем карточкам товаров
-    document.querySelectorAll('.product-card').forEach(card => {
-        const productId = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-        if (productId) {
-            card.setAttribute('data-product-id', productId);
-        }
-    });
-});
         // Глобальные переменные
         let products = [];
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -2334,12 +2204,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const paginatedProducts = products.slice(startIndex, endIndex);
             
             grid.innerHTML = paginatedProducts.map(product => `
-                <div class="product-card" data-product-id="${product.id}">
+                <div class="product-card" onclick="window.showProduct('${product.id}')">
                     <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">${product.price} ₽</div>
-                        <button class="btn">В корзину</button>
+                        <button class="btn" onclick="event.stopPropagation(); window.addToCart('${product.id}')">В корзину</button>
                     </div>
                 </div>
             `).join('');
@@ -3048,4 +2918,17 @@ document.addEventListener('DOMContentLoaded', function() {
         window.renderPagination = renderPagination;
         window.saveProductsToStorage = saveProductsToStorage;
         window.loadProducts = loadProducts;
-        window.addProduct =
+          window.addProduct = addProduct;
+    window.updateProduct = updateProduct;
+    
+    console.log('Функции успешно присвоены глобальному объекту');
+}
+
+// Вызываем присвоение функций
+assignFunctionsToWindow();
+
+// Дополнительная проверка через 100 мс на случай, если DOM еще не готов
+setTimeout(assignFunctionsToWindow, 100);
+
+// И еще одна проверка после полной загрузки страницы
+window.addEventListener('load', assignFunctionsToWindow);
